@@ -1,0 +1,6 @@
+body {
+  font-family: "Roboto", sans-serif;
+  background: url("../images/bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}

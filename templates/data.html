@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{url_for('static',filename='css/data.css')}}">
+  <title>Healthcare</title>
+</head>
+
+<body>
+
+  <section class="flex">
+    <form onsubmit="fetchDataAndNavigate(event)" class="w-3/4 lg:w-1/4 h-screen p-3 bg-[#eee] grid grid-cols-1 gap-2">
+      <input type="number" id="staffNum" class="h-12 p-1 border rounded-lg outline-none"
+        placeholder="Enter number of staff">
+      <input type="number" id="pateintNum" class="h-12 p-1 border rounded-lg outline-none"
+        placeholder="Enter number of patient">
+      <input type="number" id="timeSlots" class="h-12 p-1 border rounded-lg outline-none"
+        placeholder="Enter number of slots">
+      <input type="number" id="tasks" class="h-12 p-1 border rounded-lg outline-none"
+        placeholder="Enter number of tasks">
+      <input type="number" id="resourcesNum" class="h-12 p-1 border rounded-lg outline-none"
+        placeholder="Enter number of resources">
+      <input type="number" id="budget" class="h-12 p-1 border rounded-lg outline-none" placeholder="Enter the budget">
+      <input type="number" id="m_min" class="h-12 p-1 border rounded-lg outline-none" placeholder="Enter m_min">
+      <input type="number" id="m_max" class="h-12 p-1 border rounded-lg outline-none" placeholder="Enter m_max">
+      <input type="number" id="h_min" class="h-12 p-1 border rounded-lg outline-none" placeholder="Enter h_min">
+      <input type="number" id="h_max" class="h-12 p-1 border rounded-lg outline-none" placeholder="Enter h_max">
+      <input type="number" id="d_min" class="h-12 p-1 border rounded-lg outline-none" placeholder="Enter d_min">
+      <input type="number" id="d_max" class="h-12 p-1 border rounded-lg outline-none" placeholder="Enter d_max">
+      <input type="number" id="f_min" class="h-12 p-1 border rounded-lg outline-none" placeholder="Enter f_min">
+      <input type="number" id="f_max" class="h-12 p-1 border rounded-lg outline-none" placeholder="Enter f_max">
+      <input type="number" id="seed" class="h-12 p-1 border rounded-lg outline-none" placeholder="Enter the seed">
+      <button type="submit" class="h-12 bg-green-600 text-white rounded-lg">Submit</button>
+    </form>
+
+    <main class="pt-3 grow">
+      <div id="fitness" class="text-xl text-center"></div>
+      <section class="flex grow justify-center gap-3 pt-3">
+        <div id="overTime"></div>
+        <div id="staff"></div>
+        <div id="resources"></div>
+        <div id="vip"></div>
+      </section>
+    </main>
+
+  </section>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init();
+    async function fetchDataAndNavigate(event) {
+      event.preventDefault();
+      const data = {
+        n: parseInt(document.querySelector("#staffNum").value, 10),
+        p: parseInt(document.querySelector("#pateintNum").value, 10),
+        t: parseInt(document.querySelector("#timeSlots").value, 10),
+        k: parseInt(document.querySelector("#tasks").value, 10),
+        r: parseInt(document.querySelector("#resourcesNum").value, 10),
+        b: parseInt(document.querySelector("#budget").value, 10),
+        m_min: parseInt(document.querySelector("#m_min").value, 10),
+        m_max: parseInt(document.querySelector("#m_max").value, 10),
+        h_min: parseInt(document.querySelector("#h_min").value, 10),
+        h_max: parseInt(document.querySelector("#h_max").value, 10),
+        d_min: parseInt(document.querySelector("#d_min").value, 10),
+        d_max: parseInt(document.querySelector("#d_max").value, 10),
+        f_min: parseInt(document.querySelector("#f_min").value, 10),
+        f_max: parseInt(document.querySelector("#f_max").value, 10),
+        seed: parseInt(document.querySelector("#seed").value, 10)
+      };
+
+      try {
+        const response = await fetch('http://localhost:5000/api/getData', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        const res = await response.json();
+
+        const overTime = `
+      <table class="border-collapse border">
+        <tr class="bg-[#eee]">
+          <th class="text-lg border py-1 px-2">Staff member</th>
+          <th class="text-lg border py-1 px-2">Over time</th>
+        </tr>
+        ${res.data.best_individual.o.map((e, index) => `
+          <tr>
+            <td class="border py-1 px-2">Staff ${index + 1}</td>
+            <td class="border py-1 px-2">${e ? "Yes" : "No"}</td>
+          </tr>
+        `).join('')}
+      </table>`;
+
+        const staff = `
+      <table class="border-collapse border">
+        <tr class="bg-[#eee]">
+          <th class="text-lg border py-1 px-2">Staff member</th>
+          <th class="text-lg border py-1 px-2">Time slot</th>
+        </tr>
+        ${res.data.best_individual.x.map((row, rowIndex) => `
+          <tr>
+            <td class="border py-1 px-2">Staff ${rowIndex + 1}</td>
+            <td class="border py-1 px-2">
+              ${row.map((e, colIndex) => e ? colIndex + 1 : null).filter(index => index !== null).join(', ')}
+            </td>
+          </tr>
+        `).join('')}
+      </table>`;
+
+        const resources = `
+      <table class="border-collapse border">
+        <tr class="bg-[#eee]">
+          <th class="text-lg border py-1 px-2">Resource</th>
+          <th class="text-lg border py-1 px-2">Time slot</th>
+        </tr>
+        ${res.data.best_individual.z.map((row, rowIndex) => `
+          <tr>
+            <td class="border py-1 px-2">Resource ${rowIndex + 1}</td>
+            <td class="border py-1 px-2">
+              ${row.map((e, colIndex) => e ? colIndex + 1 : null).filter(index => index !== null).join(', ')}
+            </td>
+          </tr>
+        `).join('')}
+      </table>`;
+
+        const vip = `
+      <table class="border-collapse border">
+        <tr class="bg-[#eee]">
+          <th class="text-lg border py-1 px-2">Staff member</th>
+          <th class="text-lg border py-1 px-2">Patient</th>
+        </tr>
+        ${res.data.best_individual.v.map((row, rowIndex) => `
+          <tr>
+            <td class="border py-1 px-2">Staff ${rowIndex + 1}</td>
+            <td class="border py-1 px-2">
+              ${row.map((e, colIndex) => e ? colIndex + 1 : null).filter(index => index !== null).join(', ')}
+            </td>
+          </tr>
+        `).join('')}
+      </table>`;
+
+        document.querySelector("#fitness").innerHTML = "Cost = " + Math.floor(res.data.best_fitness) + "$";
+        document.querySelector("#overTime").innerHTML = overTime;
+        document.querySelector("#staff").innerHTML = staff;
+        document.querySelector("#resources").innerHTML = resources;
+        document.querySelector("#vip").innerHTML = vip;
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+  </script>
+</body>
+
+</html>

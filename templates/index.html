@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{url_for('static',filename='css/index.css')}}">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet">
+  <title>Healthcare</title>
+</head>
+
+<body class="w-full h-screen flex flex-col justify-center items-center gap-8">
+  <img src="../static/images/cu.png" class="w-48 absolute top-[5%] left-[2%]">
+  <img src="../static/images/fcai.png" class="w-48 absolute top-[5%] right-[3%]">
+  <h2 class="text-3xl text-white">Dr. Doaa Saleh</h2>
+  <h1 class="font-bold text-6xl text-white">Optimizing Healthcare Delivery</h1>
+  <p class="text-2xl text-white">
+    Ezz Fahmy - Mostafa Said - Akram Mohamed - Ahmed Hussein
+  </p>
+  <a href="{{ url_for('data') }}" data-aos="fade-up" data-aos-delay="500" data-aos-duration="1000"
+    class="w-64 h-14 bg-[#eee] text-sky-600 text-2xl rounded-lg flex justify-center items-center border-2 border-[#eee] hover:bg-transparent hover:text-white">
+    Let's Start
+  </a>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
