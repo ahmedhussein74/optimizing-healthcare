@@ -33,9 +33,11 @@ def init_params(
     # Initialize Si (Skill Level Variable) - dimensions: N
     Si = np.random.rand(N)
 
-    Mipkt = generate_random_matrix((N, P, K, T), 1, 5, seed)  # Task matching weights
-    Hi = generate_random_matrix((N), 8, 12, seed)  # Staff hours
-    D_t = generate_random_matrix((T), 2, 5, seed)  # Total demand per time slot
-    Fij = generate_random_matrix((N, N), 1, 3, seed)  # Staff familiarity
+    Mipkt = generate_random_matrix(
+        (N, P, K, T), M_min, M_max, seed
+    )  # Task matching weights
+    Hi = generate_random_matrix((N), H_min, H_max, seed)  # Staff hours
+    D_t = generate_random_matrix((T), D_min, D_max, seed)  # Total demand per time slot
+    Fij = generate_random_matrix((N, N), F_min, F_max, seed)  # Staff familiarity
 
     return Wit, Iijt, Cpt, Drt, Ppt, Oi, Up, Si, Mipkt, Hi, D_t, Fij
